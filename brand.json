@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "Adidas",
+    "image": "https://picsum.photos/id/30/100/100"
+  },
+  {
+    "id": "2",
+    "name": "Nike",
+    "image": "https://picsum.photos/id/31/100/100"
+  },
+  {
+    "id": "3",
+    "name": "Fila",
+    "image": "https://picsum.photos/id/32/100/100"
+  },
+  {
+    "id": "4",
+    "name": "Puma",
+    "image": "https://picsum.photos/id/33/100/100"
+  }
+]
