@@ -10,7 +10,7 @@ import {
 import React, { useState } from 'react';
 import Buttond from '../components/button';
 
-export default function welcome({ navigation }: { navigation: any }) {
+export default function Welcome({ navigation }: { navigation: any }) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [error, setError] = useState('');
 
@@ -88,7 +88,10 @@ export default function welcome({ navigation }: { navigation: any }) {
 
     setError('');
     console.log(form);
-    navigation.navigate('home');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'home' }],
+    });
   }}
         style={styles.qw}
       >

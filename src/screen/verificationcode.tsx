@@ -9,7 +9,7 @@ import {
 import React, { useRef, useState } from 'react';
 import Buttond from '../components/button';
 
-export default function verificationcode({ navigation }: { navigation: any }) {
+export default function VerificationCode({ navigation }: { navigation: any }) {
   const [otp, setOtp] = useState(['', '', '', '']);
 
   const input1 = useRef<TextInput>(null);

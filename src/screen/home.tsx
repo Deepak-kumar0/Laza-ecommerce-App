@@ -11,13 +11,36 @@ import React, { useContext } from 'react';
 import products from '../../data.json';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import brand from '../../brand.json';
+import { CartContext } from '../context/cart-context';
+import { RootState } from '../redux/store';
+import { addToCart, removeFromCart } from '../redux/slices/cart-slice';
+import { useDispatch,  useSelector,   } from 'react-redux';
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from '../redux/slices/wishlist-slice';
 
 export default function Home({ navigation }: { navigation: any }) {
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state: RootState) => state.wishlist.wishlist);
+  const cart = useSelector((state: RootState) => state?.cart?.cart);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.img}>
-        <Image style={styles.icon} source={require('../assets/Menu.png')} />
-        <Image style={styles.icon} source={require('../assets/Cart.png')} />
+        <TouchableOpacity>
+          <Image style={styles.icon} source={require('../assets/Menu.png')} />
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <TouchableOpacity onPress={() => navigation.navigate('wishlist')}>
+            <Text style={{ fontSize: 28, color: '#9775FA', marginTop: 8 }}>♡</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('cart')}>
+            <Image style={styles.icon} source={require('../assets/Cart.png')} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Text style={styles.header}>Hello</Text>
@@ -58,7 +81,7 @@ export default function Home({ navigation }: { navigation: any }) {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('product')}>
+        <TouchableOpacity>
           <Image style={styles.voice} source={require('../assets/Voice.png')} />
         </TouchableOpacity>
       </View>
@@ -100,13 +123,56 @@ export default function Home({ navigation }: { navigation: any }) {
         windowSize={5}
         removeClippedSubviews
         contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.image} />
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.price}>${item.price}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const isAdded = cart.some((p: any) => String(p.id) === String(item.id));
+          const isWishlisted = wishlist.some((p: any) => String(p.id) === String(item.id));
+          return (
+            <TouchableOpacity
+              onPress={() => navigation.push('product', { item })}
+              style={styles.card}
+              activeOpacity={0.8}
+            >
+              <Image source={{ uri: item.image }} style={styles.image} />
+
+              <Text style={styles.name}>{item.name}</Text>
+
+              <Text style={styles.price}>${item.price}</Text>
+
+              <TouchableOpacity
+                onPress={() => {
+                  if (isWishlisted) {
+                    dispatch(removeFromWishlist(item.id));
+                  } else {
+                    dispatch(addToWishlist(item));
+                  }
+                }}
+                style={styles.wishlistBtn}
+              >
+                <Text style={styles.wishlistText}>
+                  {isWishlisted ? '♥' : '♡'}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.cartBtn,
+                  isAdded && { backgroundColor: '#ff4d4d' },
+                ]}
+                onPress={() => {
+                  if (isAdded) {
+                    dispatch(removeFromCart(item?.id));
+                  } else {
+                    dispatch(addToCart(item));
+                  }
+                }}
+              >
+                <Text style={styles.cartText}>
+                  {isAdded ? 'Remove' : 'Add to Cart'}
+                </Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          );
+        }}
       />
     </SafeAreaView>
   );
@@ -117,6 +183,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fefefe',
     paddingHorizontal: 13,
+  },
+  cartBtn: {
+    marginTop: 10,
+    backgroundColor: '#9775FA',
+    padding: 10,
+    borderRadius: 8,
+  },
+
+  cartText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: '600',
   },
   brandCard: {
     // flexDirection: 'row',
@@ -157,6 +235,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
   },
+  wishlistBtn: {
+  marginTop: 10,
+  alignSelf: 'flex-end',
+},
+wishlistText: {
+  fontSize: 22,
+  color: '#9775FA',
+},
 
   icon: {
     width: 45,

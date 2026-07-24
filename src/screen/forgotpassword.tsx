@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import Buttond from '../components/button';
 
-export default function forgotpassword({ navigation }: { navigation: any }) {
+export default function ForgotPassword({ navigation }: { navigation: any }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 

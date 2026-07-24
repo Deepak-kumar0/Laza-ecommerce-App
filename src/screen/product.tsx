@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -13,7 +14,7 @@ import {
 
 const { width } = Dimensions.get('window');
 
-export default function Product() {
+export default function Product({ navigation }: { navigation: any }) {
   const images = [
     'https://picsum.photos/id/1011/500/500',
     'https://picsum.photos/id/1018/500/500',
@@ -25,47 +26,58 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState('M');
   const sizes = ['S', 'M', 'L', 'XL', '2XL'];
 
+  const route = useRoute();
+
+  const item = route?.params?.item;
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
-        {/* Top Image Banner Container */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
         <View style={styles.imageContainer}>
-          {/* Floating Header */}
           <View style={styles.header}>
-            <TouchableOpacity style={styles.iconCircle}>
-              <Image 
-              style={styles.backIcon}
-              source={require('../assets/Back.png')}/>
+            <TouchableOpacity
+              style={styles.iconCircle}
+            onPress={() => navigation.goBack()}
+            >
+              <Image
+                style={styles.backIcon}
+                source={require('../assets/Back.png')}
+              />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconCircle}>
-            <Image  
-             style={styles.backIcon}
-             source={require('../assets/Cart.png')}/>
+              <Image
+                style={styles.backIcon}
+                source={require('../assets/Cart.png')}
+              />
             </TouchableOpacity>
           </View>
 
-          <Image source={{ uri: selectedImage }} style={styles.mainImage} resizeMode="contain" />
+          <Image
+            source={{ uri: item?.image }}
+            style={styles.mainImage}
+            resizeMode="contain"
+          />
         </View>
 
-        {/* Content Container */}
         <View style={styles.content}>
-          {/* Title & Price Header */}
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.category}>Men's Printed Pullover Hoodie</Text>
-              <Text style={styles.title}>Nike Club Fleece</Text>
+              <Text style={styles.category}>Men's category</Text>
+              <Text style={styles.title}>{item?.name}</Text>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={styles.priceLabel}>Price</Text>
-              <Text style={styles.price}>$120</Text>
+              <Text style={styles.price}>${item?.price}</Text>
             </View>
           </View>
 
-          {/* Thumbnails */}
           <FlatList
             horizontal
             data={images}
-            keyExtractor={(i) => i}
+            keyExtractor={i => i}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.thumbList}
             renderItem={({ item }) => (
@@ -81,7 +93,6 @@ export default function Product() {
             )}
           />
 
-          {/* Size Section */}
           <View style={[styles.row, { marginTop: 8 }]}>
             <Text style={styles.sectionTitle}>Size</Text>
             <TouchableOpacity>
@@ -90,11 +101,14 @@ export default function Product() {
           </View>
 
           <View style={styles.sizeRow}>
-            {sizes.map((s) => (
+            {sizes.map(s => (
               <TouchableOpacity
                 key={s}
                 onPress={() => setSelectedSize(s)}
-                style={[styles.sizeBtn, selectedSize === s && styles.sizeActive]}
+                style={[
+                  styles.sizeBtn,
+                  selectedSize === s && styles.sizeActive,
+                ]}
               >
                 <Text
                   style={[
@@ -115,7 +129,6 @@ export default function Product() {
             <Text style={styles.readMore}>Read More..</Text>
           </Text>
 
-          {/* Reviews Section Header */}
           <View style={styles.row}>
             <Text style={styles.sectionTitle}>Reviews</Text>
             <TouchableOpacity>
@@ -123,7 +136,6 @@ export default function Product() {
             </TouchableOpacity>
           </View>
 
-          {/* Review Card */}
           <View style={styles.reviewCard}>
             <View style={styles.reviewHeader}>
               <Image
@@ -136,18 +148,20 @@ export default function Product() {
               </View>
               <View style={{ alignItems: 'flex-end' }}>
                 <Text style={styles.ratingText}>
-                  <Text style={{ fontWeight: 'bold', color: '#1D1E20' }}>4.8</Text>{' '}
+                  <Text style={{ fontWeight: 'bold', color: '#1D1E20' }}>
+                    4.8
+                  </Text>{' '}
                   <Text style={{ color: '#8F959E', fontSize: 11 }}>rating</Text>
                 </Text>
                 <Text style={styles.stars}>⭐⭐⭐⭐⭐</Text>
               </View>
             </View>
             <Text style={styles.reviewBody}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Pellentesque malesuada eget vitae amet...
             </Text>
           </View>
 
-          {/* Price & Action Row */}
           <View style={styles.priceRow}>
             <View>
               <Text style={styles.totalPriceTitle}>Total Price</Text>
@@ -158,7 +172,6 @@ export default function Product() {
         </View>
       </ScrollView>
 
-      {/* Full-width Bottom Button */}
       <TouchableOpacity style={styles.bottomBarButton} activeOpacity={0.8}>
         <Text style={styles.bottomBarButtonText}>Add to Cart</Text>
       </TouchableOpacity>
@@ -185,6 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     zIndex: 10,
+    elevation: 1000, // Android
   },
   iconCircle: {
     width: 44,
@@ -204,8 +218,9 @@ const styles = StyleSheet.create({
     height: 45,
     resizeMode: 'contain',
   },
- 
+
   mainImage: {
+    marginTop:15,
     width: '100%',
     height: '100%',
   },

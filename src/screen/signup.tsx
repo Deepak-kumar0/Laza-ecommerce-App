@@ -73,7 +73,10 @@ export default function Signup({ navigation }: { navigation: any }) {
     //}
 
     console.log(form);
-    navigation.navigate('home');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'home' }],
+    });
   };
 
   return (
@@ -204,6 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal:15,
     
   },
 

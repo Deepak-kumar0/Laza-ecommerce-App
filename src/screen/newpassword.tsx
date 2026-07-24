@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import Buttond from '../components/button';
 
-export default function newpassword({ navigation }: { navigation: any }) {
+export default function NewPassword({ navigation }: { navigation: any }) {
   const [form, setForm] = useState({
     password: '',
     newPassword: '',
@@ -69,7 +69,10 @@ export default function newpassword({ navigation }: { navigation: any }) {
         text="Reset Password"
         onpress={() => {
           if (form.password === form.newPassword) {
-            navigation.navigate('home');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'home' }],
+            });
           } else {
             setError('Password not match');
           }

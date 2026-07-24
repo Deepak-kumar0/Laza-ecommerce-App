@@ -1,7 +1,7 @@
 import { View, Text, Image } from 'react-native';
 import React, { useEffect } from 'react';
 
-export default function splash({ navigation }: any) {
+export default function Splash({ navigation }: any) {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('login');
