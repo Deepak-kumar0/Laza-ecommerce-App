@@ -6,18 +6,22 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from './src/context/ThemeContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 export default function App() {
   return (
-    <ThemeProvider>
-    <UserProvider>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <NavigationContainer>
-            <StackNavigation />
-          </NavigationContainer>
-        </PersistGate>
-      </Provider>
-    </UserProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <UserProvider>
+          <Provider store={store}>
+            <PersistGate persistor={persistor}>
+              <NavigationContainer>
+                <StackNavigation />
+              </NavigationContainer>
+            </PersistGate>
+          </Provider>
+        </UserProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

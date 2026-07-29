@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,107 +7,180 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
-import { CartContext } from '../context/cart-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { decreaseQuantity, increaseQuantity, removeFromCart } from '../redux/slices/cart-slice';
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from '../redux/slices/cart-slice';
 
 export default function Cart({ navigation }: any) {
-  const cart=useSelector((state:RootState)=>state?.cart?.cart)
-  const dispatch=useDispatch()
+  const cart = useSelector((state: RootState) => state?.cart?.cart) || [];
+  const dispatch = useDispatch();
 
   const subtotal = cart.reduce(
     (sum: number, item: any) => sum + item.price * item.quantity,
     0,
   );
-
-  const itemCount = cart.reduce(
-    (sum: number, item: any) => sum + item.quantity,
-    0,
-  );
+  const shippingCost = cart.length > 0 ? 10 : 0;
+  const total = subtotal + shippingCost;
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Image source={require('../assets/Back.png')} style={styles.icon} />
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            source={require('../assets/Back.png')}
+            style={styles.backIcon}
+          />
         </TouchableOpacity>
-
         <Text style={styles.headerTitle}>Cart</Text>
-
         <View style={styles.placeholder} />
       </View>
 
-      <FlatList
-        data={cart}
-        keyExtractor={item => item.id.toString()}
+      <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={() => (
+        contentContainerStyle={styles.scrollContent}
+      >
+        {cart.length === 0 ? (
           <View style={styles.empty}>
             <Text style={styles.emptyText}>Your cart is empty.</Text>
           </View>
-        )}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.image} />
-
-            <View style={styles.info}>
-              <Text numberOfLines={2} style={styles.name}>
-                {item.name}
-              </Text>
-
-              <Text style={styles.brand}>Nike Sportswear</Text>
-
-              <Text style={styles.price}>${item.price}</Text>
-
-              <View style={styles.qtyRow}>
-                <TouchableOpacity
-                  style={styles.qtyBtn}
-                  onPress={() => dispatch(decreaseQuantity(item.id))}
-                >
-                  <Text style={styles.qtyTxt}>-</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.qty}>{item.quantity}</Text>
-
-                <TouchableOpacity
-                  style={styles.qtyBtn}
-                  onPress={() =>dispatch( increaseQuantity(item.id))}
-                >
-                  <Text style={styles.qtyTxt}>+</Text>
-                </TouchableOpacity>
+        ) : (
+          cart.map((item: any) => (
+            <View key={item.id.toString()} style={styles.card}>
+              <View style={styles.imageWrapper}>
+                <Image source={{ uri: item.image }} style={styles.image} />
               </View>
+
+              <View style={styles.info}>
+                <Text numberOfLines={2} style={styles.name}>
+                  {item.name || "Men's Tie-Dye T-Shirt"}
+                </Text>
+                <Text style={styles.brand}>Nike Sportswear</Text>
+                <Text style={styles.taxText}>${item.price} (-$4.00 Tax)</Text>
+
+                <View style={styles.qtyRow}>
+                  <TouchableOpacity
+                    style={styles.qtyBtn}
+                    onPress={() => dispatch(decreaseQuantity(item.id))}
+                  >
+                    <Image
+                      source={require('../assets/ArrowDown.png')}
+                      style={styles.arrowIcon}
+                    />
+                  </TouchableOpacity>
+
+                  <Text style={styles.qty}>{item.quantity}</Text>
+
+                  <TouchableOpacity
+                    style={styles.qtyBtn}
+                    onPress={() => dispatch(increaseQuantity(item.id))}
+                  >
+                    <Image
+                      source={require('../assets/ArrowUp.png')}
+                      style={styles.arrowIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={styles.deleteBtn}
+                onPress={() => dispatch(removeFromCart(item.id))}
+              >
+                <Image
+                  source={require('../assets/Trash.png')}
+                  style={styles.trashIcon}
+                />
+              </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.deleteBtn}
-              onPress={() => dispatch(removeFromCart(item.id))}
-            >
-              <Text style={styles.deleteText}>delete</Text>
-            </TouchableOpacity>
-          </View>
+          ))
         )}
-      />
 
-      {cart.length > 0 && (
-        <View style={styles.summary}>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Items</Text>
-            <Text style={styles.summaryValue}>{itemCount}</Text>
-          </View>
-
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal</Text>
-            <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.checkoutBtn}>
-            <Text style={styles.checkoutText}>Checkout</Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Delivery Address</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Address')}>
+            <Image
+              source={require('../assets/Arrow.png')}
+              style={styles.sectionArrow}
+            />
           </TouchableOpacity>
         </View>
-      )}
+
+        <View style={styles.addressCard}>
+          <Image
+            source={require('../assets/map.png')}
+            style={styles.addressIcon}
+          />
+          <View style={styles.addressTextContainer}>
+            <Text style={styles.addressTitle}>Chhatak, Sunamgonj 12/8AB</Text>
+            <Text style={styles.addressSubtitle}>Sylhet</Text>
+          </View>
+          <View style={styles.checkCircle}>
+            <Text style={styles.checkMark}>✓</Text>
+          </View>
+        </View>
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Payment Method</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('payment')}>
+            <Image
+              source={require('../assets/Arrow.png')}
+              style={styles.sectionArrow}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.paymentCard}>
+          <View style={styles.cardLogoWrapper}>
+            <Text style={styles.visaText}>VISA</Text>
+          </View>
+          <View style={styles.paymentTextContainer}>
+            <Text style={styles.paymentTitle}>Visa Classic</Text>
+            <Text style={styles.paymentSubtitle}>**** 7690</Text>
+          </View>
+          <View style={styles.checkCircle}>
+            <Text style={styles.checkMark}>✓</Text>
+          </View>
+        </View>
+
+        <Text
+          style={[styles.sectionTitle, { marginTop: 15, marginBottom: 12 }]}
+        >
+          Order Info
+        </Text>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Subtotal</Text>
+          <Text style={styles.summaryValue}>${subtotal.toFixed(0)}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Shipping cost</Text>
+          <Text style={styles.summaryValue}>${shippingCost}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Total</Text>
+          <Text style={styles.summaryValue}>${total.toFixed(0)}</Text>
+        </View>
+      </ScrollView>
+
+      <View style={styles.checkoutContainer}>
+        <TouchableOpacity
+          style={styles.checkoutBtn}
+          onPress={() => navigation.navigate('orderdone')}
+        >
+          <Text style={styles.checkoutText}>Checkout</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -116,75 +189,81 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 18,
   },
 
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 50,
-    marginBottom: 20,
-  },
-
-  icon: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
+    paddingHorizontal: 20,
+    marginTop: 40,
+    marginBottom: 15,
   },
 
   backBtn: {
+    width: 45,
+    height: 45,
+    backgroundColor: '#F5F6FA',
+    //justify: 'center',
+    alignItems: 'center',
+    borderRadius: 22.5,
+    marginTop: 15,
+  },
+
+  backIcon: {
     width: 40,
     height: 40,
-    backgroundColor: '#F5F6FA',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
+    resizeMode: 'contain',
   },
 
   headerTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700',
     color: '#1D1E20',
   },
 
   placeholder: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
   },
 
-  listContent: {
+  scrollContent: {
+    paddingHorizontal: 20,
     paddingBottom: 20,
   },
 
   empty: {
     alignItems: 'center',
-    marginTop: 80,
+    marginVertical: 40,
   },
 
   emptyText: {
-    fontSize: 18,
-    color: '#777',
+    fontSize: 16,
+    color: '#8F959E',
   },
 
   card: {
     flexDirection: 'row',
     backgroundColor: '#F5F6FA',
-    borderRadius: 18,
-    padding: 15,
-    marginBottom: 18,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    borderRadius: 16,
+    padding: 12,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+
+  imageWrapper: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 12,
+    width: 70,
+    height: 70,
     resizeMode: 'contain',
-    backgroundColor: '#fff',
   },
 
   info: {
@@ -193,69 +272,177 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
     color: '#1D1E20',
+    lineHeight: 18,
   },
 
   brand: {
-    marginTop: 3,
+    fontSize: 11,
     color: '#8F959E',
+    marginTop: 2,
   },
 
-  price: {
-    marginTop: 8,
-    fontSize: 16,
-    fontWeight: '700',
+  taxText: {
+    fontSize: 11,
+    color: '#8F959E',
+    marginTop: 2,
   },
 
   qtyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 8,
   },
 
   qtyBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1,
+    borderColor: '#E7E8EA',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
+  },
+
+  arrowIcon: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
+  },
+
+  qty: {
+    marginHorizontal: 12,
+    fontWeight: '600',
+    fontSize: 13,
+    color: '#1D1E20',
+  },
+
+  deleteBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+  },
+
+  trashIcon: {
+    width: 16,
+    height: 16,
+    tintColor: '#8F959E',
+  },
+
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#1D1E20',
+  },
+
+  sectionArrow: {
+    width: 16,
+    height: 16,
+    tintColor: '#1D1E20',
+  },
+
+  addressCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+
+  addressIcon: {
+    width: 45,
+    height: 45,
+    borderRadius: 10,
+  },
+
+  addressTextContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  addressTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1D1E20',
+  },
+
+  addressSubtitle: {
+    fontSize: 12,
+    color: '#8F959E',
+    marginTop: 2,
+  },
+
+  paymentCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+
+  cardLogoWrapper: {
+    width: 48,
+    height: 36,
+    backgroundColor: '#F5F6FA',
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  qtyTxt: {
-    fontSize: 18,
-    fontWeight: '700',
+  visaText: {
+    fontSize: 12,
+    fontWeight: '900',
+    color: '#1434CB',
+    fontStyle: 'italic',
   },
 
-  qty: {
-    marginHorizontal: 15,
-    fontWeight: '700',
-    fontSize: 16,
+  paymentTextContainer: {
+    flex: 1,
+    marginLeft: 12,
   },
 
-  deleteBtn: {
-    padding: 5,
+  paymentTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1D1E20',
+  },
+
+  paymentSubtitle: {
+    fontSize: 12,
+    color: '#8F959E',
+    marginTop: 2,
+  },
+
+  checkCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#4ACD83',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 
-  deleteText: {
-    color: 'red',
-    fontSize: 18,
-  },
-
-  summary: {
-    backgroundColor: '#F5F6FA',
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 18,
+  checkMark: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 8,
   },
 
   summaryLabel: {
@@ -269,11 +456,17 @@ const styles = StyleSheet.create({
     color: '#1D1E20',
   },
 
+  checkoutContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    paddingTop: 10,
+  },
+
   checkoutBtn: {
-    marginTop: 8,
     backgroundColor: '#9775FA',
     borderRadius: 12,
-    paddingVertical: 14,
+    paddingVertical: 16,
+
     alignItems: 'center',
   },
 

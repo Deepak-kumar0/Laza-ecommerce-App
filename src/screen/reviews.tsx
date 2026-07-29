@@ -76,7 +76,11 @@ export default function Reviews({ navigation, route }: any) {
             onPress={() => navigation?.goBack()}
             activeOpacity={0.7}
           >
-            <Text style={styles.backArrow}>←</Text>
+            <Image
+              source={require('../assets/Back.png')}
+              style={styles.backIcon}
+            />
+            {/* <Text style={styles.backArrow}>←</Text> */}
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Reviews</Text>
           <View style={styles.headerSpacer} />
@@ -158,7 +162,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    //paddingVertical: 12,
+  },
+  backIcon: {
+    width: 45,
+    height: 45,
+    resizeMode: 'contain',
   },
   backButton: {
     width: 40,

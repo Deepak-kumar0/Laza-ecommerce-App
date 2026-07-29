@@ -14,6 +14,11 @@ import camera from '../screen/camera';
 import TabNavigation from './bottomtabs/tabNavigation';
 import reviews from '../screen/reviews';
 import AddReview from '../screen/addReview';
+import Address from '../screen/Address';
+import payment from '../screen/payment';
+import AddnewCard from '../screen/AddnewCard';
+import orderdone from '../screen/orderdone';
+
 export default function StackNavigation() {
   const Stack = createNativeStackNavigator();
 
@@ -32,6 +37,10 @@ export default function StackNavigation() {
       <Stack.Screen name="product" component={Product}/>
       <Stack.Screen name="reviews" component={reviews}/>
       <Stack.Screen name="Addreviews" component={AddReview}/>
+      <Stack.Screen name="Address" component={Address}/>
+      <Stack.Screen name="payment"  component={payment}/>
+      <Stack.Screen name="AddnewCard" component={AddnewCard}/>
+      <Stack.Screen name='orderdone' component={orderdone}/>
       <Stack.Screen name="cart" component={Cart}/>
       <Stack.Screen name="wishlist" component={Wishlist}/>
       <Stack.Screen name="camera" component={camera}/>
