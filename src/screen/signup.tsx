@@ -75,7 +75,7 @@ export default function Signup({ navigation }: { navigation: any }) {
     console.log(form);
     navigation.reset({
       index: 0,
-      routes: [{ name: 'home' }],
+      routes: [{ name: 'main' }],
     });
   };
 

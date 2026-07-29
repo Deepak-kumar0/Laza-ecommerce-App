@@ -1,8 +1,42 @@
+// import { combineReducers, configureStore } from '@reduxjs/toolkit';
+// import cartReducer from './slices/cart-slice';
+// import wishlistReducer from './slices/wishlist-slice';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { persistReducer, persistStore } from 'redux-persist';
+
+// const rootReducer = combineReducers({
+//   cart: cartReducer,
+//   wishlist: wishlistReducer,
+// });
+
+// const persistConfig = {
+//   key: 'root',
+//   storage: AsyncStorage,
+//   whitelist:['cart'],
+// };
+
+// const persistedReducer = persistReducer(
+//   persistConfig,
+//   rootReducer,
+// );
+
+// export const store = configureStore({
+//   reducer: persistedReducer,
+//   middleware: getDefaultMiddleware =>
+//     getDefaultMiddleware({
+//       serializableCheck: false,
+//     }),
+// });
+
+// export const persistor = persistStore(store);
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import cartReducer from './slices/cart-slice';
 import wishlistReducer from './slices/wishlist-slice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import { mmkvStorage } from './mmkvStorage';
 
 const rootReducer = combineReducers({
   cart: cartReducer,
@@ -11,8 +45,8 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
-  whitelist:['cart'],
+  storage: mmkvStorage,
+  whitelist: ['cart'],
 };
 
 const persistedReducer = persistReducer(

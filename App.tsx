@@ -5,8 +5,10 @@ import StackNavigation from './src/navigation/stackNavigation';
 import { Provider } from 'react-redux';
 import { persistor, store } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from './src/context/ThemeContext';
 export default function App() {
   return (
+    <ThemeProvider>
     <UserProvider>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
@@ -16,5 +18,6 @@ export default function App() {
         </PersistGate>
       </Provider>
     </UserProvider>
+    </ThemeProvider>
   );
 }

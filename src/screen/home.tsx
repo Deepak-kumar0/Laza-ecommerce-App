@@ -14,7 +14,7 @@ import brand from '../../brand.json';
 import { CartContext } from '../context/cart-context';
 import { RootState } from '../redux/store';
 import { addToCart, removeFromCart } from '../redux/slices/cart-slice';
-import { useDispatch,  useSelector,   } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addToWishlist,
   removeFromWishlist,
@@ -34,7 +34,9 @@ export default function Home({ navigation }: { navigation: any }) {
 
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <TouchableOpacity onPress={() => navigation.navigate('wishlist')}>
-            <Text style={{ fontSize: 28, color: '#9775FA', marginTop: 8 }}>♡</Text>
+            <Text style={{ fontSize: 28, color: '#9775FA', marginTop: 8 }}>
+              ♡
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('cart')}>
@@ -81,7 +83,7 @@ export default function Home({ navigation }: { navigation: any }) {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('camera')}>
           <Image style={styles.voice} source={require('../assets/Voice.png')} />
         </TouchableOpacity>
       </View>
@@ -124,8 +126,12 @@ export default function Home({ navigation }: { navigation: any }) {
         removeClippedSubviews
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => {
-          const isAdded = cart.some((p: any) => String(p.id) === String(item.id));
-          const isWishlisted = wishlist.some((p: any) => String(p.id) === String(item.id));
+          const isAdded = cart.some(
+            (p: any) => String(p.id) === String(item.id),
+          );
+          const isWishlisted = wishlist.some(
+            (p: any) => String(p.id) === String(item.id),
+          );
           return (
             <TouchableOpacity
               onPress={() => navigation.push('product', { item })}
@@ -236,13 +242,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   wishlistBtn: {
-  marginTop: 10,
-  alignSelf: 'flex-end',
-},
-wishlistText: {
-  fontSize: 22,
-  color: '#9775FA',
-},
+    marginTop: 10,
+    alignSelf: 'flex-end',
+  },
+  wishlistText: {
+    fontSize: 22,
+    color: '#9775FA',
+  },
 
   icon: {
     width: 45,

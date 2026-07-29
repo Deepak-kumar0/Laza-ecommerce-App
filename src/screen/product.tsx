@@ -40,7 +40,7 @@ export default function Product({ navigation }: { navigation: any }) {
           <View style={styles.header}>
             <TouchableOpacity
               style={styles.iconCircle}
-            onPress={() => navigation.goBack()}
+              onPress={() => navigation.goBack()}
             >
               <Image
                 style={styles.backIcon}
@@ -131,7 +131,13 @@ export default function Product({ navigation }: { navigation: any }) {
 
           <View style={styles.row}>
             <Text style={styles.sectionTitle}>Reviews</Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('reviews', {
+                  reviews: item.reviews,
+                })
+              }
+            >
               <Text style={styles.guide}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -220,7 +226,7 @@ const styles = StyleSheet.create({
   },
 
   mainImage: {
-    marginTop:15,
+    marginTop: 15,
     width: '100%',
     height: '100%',
   },
