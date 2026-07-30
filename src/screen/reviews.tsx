@@ -48,7 +48,7 @@ export default function Reviews({ navigation, route }: any) {
     },
   ];
 
-  const { colors } = useTheme();
+  const { colors, isDarkMode } = useTheme();
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -67,12 +67,15 @@ export default function Reviews({ navigation, route }: any) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.headerBar}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: colors.card }]}
             onPress={() => navigation?.goBack()}
             activeOpacity={0.7}
           >
@@ -80,19 +83,18 @@ export default function Reviews({ navigation, route }: any) {
               source={require('../assets/Back.png')}
               style={styles.backIcon}
             />
-            {/* <Text style={styles.backArrow}>←</Text> */}
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Reviews</Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>Reviews</Text>
           <View style={styles.headerSpacer} />
         </View>
 
         <View style={styles.statsRow}>
           <View>
-            <Text style={styles.totalReviewsCount}>
+            <Text style={[styles.totalReviewsCount, { color: colors.text }]}>
               {reviews.length || 0} Reviews
             </Text>
             <View style={styles.ratingBadge}>
-              <Text style={styles.ratingScore}>4.8</Text>
+              <Text style={[styles.ratingScore, { color: colors.text }]}>4.8</Text>
               {renderStars(5)}
             </View>
           </View>
@@ -121,23 +123,31 @@ export default function Reviews({ navigation, route }: any) {
                 />
 
                 <View style={styles.userMeta}>
-                  <Text style={styles.userName}>{item.reviewerName}</Text>
+                  <Text style={[styles.userName, { color: colors.text }]}>
+                    {item.reviewerName}
+                  </Text>
                   <View style={styles.dateRow}>
                     <Text style={styles.clockIcon}>🕒</Text>
-                    <Text style={styles.dateText}>{item.date}</Text>
+                    <Text style={[styles.dateText, { color: colors.muted }]}>
+                      {item.date}
+                    </Text>
                   </View>
                 </View>
 
                 <View style={styles.cardRatingContainer}>
-                  <Text style={styles.cardRatingText}>
+                  <Text style={[styles.cardRatingText, { color: colors.text }]}>
                     {item.rating}{' '}
-                    <Text style={styles.ratingSubText}>rating</Text>
+                    <Text style={[styles.ratingSubText, { color: colors.muted }]}>
+                      rating
+                    </Text>
                   </Text>
                   {renderStars(item.rating)}
                 </View>
               </View>
 
-              <Text style={styles.commentText}>{item.comment}</Text>
+              <Text style={[styles.commentText, { color: colors.muted }]}>
+                {item.comment}
+              </Text>
             </View>
           )}
         />
@@ -149,13 +159,11 @@ export default function Reviews({ navigation, route }: any) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
   },
 
   headerBar: {
@@ -173,7 +181,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F6FA',
     justifyContent: 'center',
     alignItems: 'center',
   },

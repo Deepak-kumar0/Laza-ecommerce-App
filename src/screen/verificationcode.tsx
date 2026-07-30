@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import Buttond from '../components/button';
+import { useTheme } from '../context/ThemeContext';
 
 export default function VerificationCode({ navigation }: { navigation: any }) {
+  const { colors } = useTheme();
   const [otp, setOtp] = useState(['', '', '', '']);
 
   const input1 = useRef<TextInput>(null);
@@ -54,7 +56,7 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -63,10 +65,10 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.txt}>Verification Code</Text>
+      <Text style={[styles.txt, { color: colors.text }]}>Verification Code</Text>
       <Image
         style={{
-          marginTop:50,
+          marginTop: 50,
           height: 270,
           width: 270,
           justifyContent: 'center',
@@ -78,7 +80,10 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
       <View style={styles.verificationcontainer}>
         <TextInput
           ref={input1}
-          style={styles.otp}
+          style={[
+            styles.otp,
+            { color: colors.text, borderColor: colors.border, backgroundColor: colors.input },
+          ]}
           keyboardType="number-pad"
           maxLength={1}
           value={otp[0]}
@@ -87,7 +92,10 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
         />
         <TextInput
           ref={input2}
-          style={styles.otp}
+          style={[
+            styles.otp,
+            { color: colors.text, borderColor: colors.border, backgroundColor: colors.input },
+          ]}
           keyboardType="number-pad"
           maxLength={1}
           value={otp[1]}
@@ -96,7 +104,10 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
         />
         <TextInput
           ref={input3}
-          style={styles.otp}
+          style={[
+            styles.otp,
+            { color: colors.text, borderColor: colors.border, backgroundColor: colors.input },
+          ]}
           keyboardType="number-pad"
           maxLength={1}
           value={otp[2]}
@@ -105,7 +116,10 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
         />
         <TextInput
           ref={input4}
-          style={styles.otp}
+          style={[
+            styles.otp,
+            { color: colors.text, borderColor: colors.border, backgroundColor: colors.input },
+          ]}
           keyboardType="number-pad"
           maxLength={1}
           value={otp[3]}
@@ -114,8 +128,8 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
         />
       </View>
 
-      <Text style={styles.timer}>
-        00:20 <Text style={{ color: '#999' }}>resend confirmation code</Text>
+      <Text style={[styles.timer, { color: colors.text }]}>
+        00:20 <Text style={{ color: colors.muted }}>resend confirmation code</Text>
       </Text>
 
       <Buttond
@@ -129,8 +143,6 @@ export default function VerificationCode({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //paddingHorizontal:10,
-    backgroundColor:'#fff'
   },
    header: {
     marginTop: 40,

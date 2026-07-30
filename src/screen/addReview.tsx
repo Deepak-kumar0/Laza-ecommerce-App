@@ -15,7 +15,7 @@ import { useTheme } from '../context/ThemeContext';
 
 export default function AddReview({ navigation }: any) {
   const [rating, setRating] = useState(0);
-  const { isDarkMode, toggleTheme, colors } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <KeyboardAvoidingView
@@ -25,14 +25,13 @@ export default function AddReview({ navigation }: any) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.viewrow}>
           <TouchableOpacity
-            style={styles.back}
+            style={[styles.back, { backgroundColor: colors.card }]}
             onPress={() => navigation.goBack()}
           >
             <Image
               source={require('../assets/Back.png')}
               style={styles.backIcon}
             />
-            {/* <Text style={styles.backtext}>←</Text> */}
           </TouchableOpacity>
           <Text style={[styles.head, { color: colors.text }]}>Add Review</Text>
           <View style={styles.placeholder} />
@@ -42,8 +41,11 @@ export default function AddReview({ navigation }: any) {
           <Text style={[styles.name, { color: colors.text }]}>Name</Text>
           <TextInput
             placeholder="Type your name"
-            placeholderTextColor={'#8F959E'}
-            style={styles.nameinput}
+            placeholderTextColor={colors.muted}
+            style={[
+              styles.nameinput,
+              { backgroundColor: colors.input, color: colors.text },
+            ]}
           />
 
           <Text style={[styles.name, { color: colors.text }]}>
@@ -51,8 +53,11 @@ export default function AddReview({ navigation }: any) {
           </Text>
           <TextInput
             placeholder="Describe your experience?"
-            placeholderTextColor={'#8F959E'}
-            style={styles.reviewinput}
+            placeholderTextColor={colors.muted}
+            style={[
+              styles.reviewinput,
+              { backgroundColor: colors.input, color: colors.text },
+            ]}
             multiline={true}
             textAlignVertical="top"
           />
@@ -72,9 +77,8 @@ export default function AddReview({ navigation }: any) {
               value={rating}
               onValueChange={currentValue => setRating(currentValue)}
               minimumTrackTintColor="#9b6cff"
-              maximumTrackTintColor="#f8f8f8"
+              maximumTrackTintColor={colors.input}
               thumbTintColor="#9b6cff"
-              thumbSize={20}
             />
             <Text style={[styles.sliderNumber, { color: colors.text }]}>
               5.0
@@ -83,7 +87,8 @@ export default function AddReview({ navigation }: any) {
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.submitBtn}>
+      <TouchableOpacity style={styles.submitBtn}
+      onPress={()=>navigation.navigate('reviews')}>
         <Text style={styles.submitText}>Submit Review</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
@@ -93,7 +98,6 @@ export default function AddReview({ navigation }: any) {
 const styles = StyleSheet.create({
   mainview: {
     flex: 1,
-    backgroundColor: 'white',
   },
   scrollContent: {
     flexGrow: 1,
@@ -108,7 +112,6 @@ const styles = StyleSheet.create({
   back: {
     width: 45,
     height: 45,
-    backgroundColor: '#F5F6FA',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
@@ -119,15 +122,9 @@ const styles = StyleSheet.create({
     height: 45,
     resizeMode: 'contain',
   },
-  // backtext: {
-  //   fontSize: 24,
-  //   color: 'black',
-  //   marginBottom: 2,
-  // },
   head: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#1D1E20',
     marginTop: 10,
   },
   placeholder: {
@@ -138,23 +135,18 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontWeight: '600',
     marginTop: 30,
-    color: '#1D1E20',
   },
   nameinput: {
-    backgroundColor: '#F5F6FA',
     padding: 15,
     marginHorizontal: 20,
     borderRadius: 10,
-    color: 'black',
     marginTop: 10,
     fontSize: 15,
   },
   reviewinput: {
-    backgroundColor: '#F5F6FA',
     padding: 15,
     marginHorizontal: 20,
     borderRadius: 10,
-    color: 'black',
     marginTop: 10,
     height: 180,
     fontSize: 15,
@@ -168,7 +160,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 15,
-    color: '#1D1E20',
   },
   sliderRow: {
     flexDirection: 'row',
@@ -182,7 +173,6 @@ const styles = StyleSheet.create({
   },
   sliderNumber: {
     fontSize: 13,
-    color: '#1D1E20',
     fontWeight: '600',
   },
   submitBtn: {

@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Image,
   Alert,
+  TextInput,
 } from 'react-native';
 import React, { useState } from 'react';
-import { TextInput } from 'react-native-gesture-handler';
 import Buttond from '../components/button';
+import { useTheme } from '../context/ThemeContext';
 
 export default function NewPassword({ navigation }: { navigation: any }) {
+  const { colors } = useTheme();
   const [form, setForm] = useState({
     password: '',
     newPassword: '',
@@ -36,7 +38,7 @@ export default function NewPassword({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -45,33 +47,39 @@ export default function NewPassword({ navigation }: { navigation: any }) {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.txt}>New Password</Text>
+      <Text style={[styles.txt, { color: colors.text }]}>New Password</Text>
 
       <View style={styles.cr}>
-        <Text style={styles.as}>Password</Text>
+        <Text style={[styles.as, { color: colors.muted }]}>Password</Text>
         <TextInput
           value={form.password}
           onChangeText={text => handleChange('password', text)}
-          style={styles.input}
+          style={[styles.input, { color: colors.text, borderBottomColor: colors.border }]}
+          placeholderTextColor={colors.muted}
+          secureTextEntry
         />
 
-        <Text style={styles.as}>Confirm Password</Text>
+        <Text style={[styles.as, { color: colors.muted }]}>Confirm Password</Text>
         <TextInput
           value={form.newPassword}
           onChangeText={text => handleChange('newPassword', text)}
-          style={styles.input}
+          style={[styles.input, { color: colors.text, borderBottomColor: colors.border }]}
+          placeholderTextColor={colors.muted}
+          secureTextEntry
         />
         <Text style={{ color: 'red' }}>{error}</Text>
       </View>
 
-      <Text style={styles.qw}>Please write your new password</Text>
+      <Text style={[styles.qw, { color: colors.muted }]}>
+        Please write your new password
+      </Text>
       <Buttond
         text="Reset Password"
         onpress={() => {
           if (form.password === form.newPassword) {
             navigation.reset({
               index: 0,
-              routes: [{ name: 'home' }],
+              routes: [{ name: 'main' }],
             });
           } else {
             setError('Password not match');
@@ -84,8 +92,6 @@ export default function NewPassword({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    //paddingHorizontal:10,
   },
   header: {
     marginTop: 40,

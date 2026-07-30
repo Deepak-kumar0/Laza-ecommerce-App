@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import Buttond from '../components/button';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Welcome({ navigation }: { navigation: any }) {
+  const { colors } = useTheme();
   const [isEnabled, setIsEnabled] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,7 +28,7 @@ export default function Welcome({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Image
           style={{ marginTop: 30 }}
@@ -34,24 +36,27 @@ export default function Welcome({ navigation }: { navigation: any }) {
         />
       </TouchableOpacity>
 
-      <Text style={styles.txt}>Welcome</Text>
-      <Text style={{ fontSize: 15, textAlign: 'center', fontWeight: '300' }}>
+      <Text style={[styles.txt, { color: colors.text }]}>Welcome</Text>
+      <Text style={{ fontSize: 15, textAlign: 'center', fontWeight: '300', color: colors.muted }}>
         Please enter your data to continue
       </Text>
 
       <View style={styles.cr}>
-        <Text style={styles.as}>Username</Text>
+        <Text style={[styles.as, { color: colors.muted }]}>Username</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text, borderBottomColor: colors.border }]}
           value={form.username}
           onChangeText={text => onhandleChange('username', text)}
+          placeholderTextColor={colors.muted}
         />
 
-        <Text style={styles.as}>Password</Text>
+        <Text style={[styles.as, { color: colors.muted }]}>Password</Text>
         <TextInput
           value={form.password}
           onChangeText={text => onhandleChange('password', text)}
-          style={styles.input}
+          style={[styles.input, { color: colors.text, borderBottomColor: colors.border }]}
+          placeholderTextColor={colors.muted}
+          secureTextEntry
         />
         <Text style={{ color: 'red' }}>{error}</Text>
 
@@ -64,14 +69,14 @@ export default function Welcome({ navigation }: { navigation: any }) {
       </View>
 
       <View style={styles.sw}>
-        <Text style={{ fontSize: 15 }}>Remember me</Text>
+        <Text style={{ fontSize: 15, color: colors.text }}>Remember me</Text>
 
         <Switch value={isEnabled} onValueChange={setIsEnabled} />
       </View>
 
-      <Text style={styles.tc}>
+      <Text style={[styles.tc, { color: colors.muted }]}>
         By connecting your account confirm that you agree with our
-        <Text style={{ fontWeight: 'bold' }}> Term and Conditions</Text>
+        <Text style={{ fontWeight: 'bold', color: colors.text }}> Term and Conditions</Text>
       </Text>
 
       <TouchableOpacity
@@ -90,7 +95,7 @@ export default function Welcome({ navigation }: { navigation: any }) {
     console.log(form);
     navigation.reset({
       index: 0,
-      routes: [{ name: 'home' }],
+      routes: [{ name: 'main' }],
     });
   }}
         style={styles.qw}

@@ -32,7 +32,7 @@ export default function Address({ navigation }: any) {
     <View style={[styles.headview, { backgroundColor: colors.background }]}>
       <View style={styles.headerRow}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={[styles.backButton, { backgroundColor: colors.card }]}
           onPress={() => navigation.goBack()}
         >
                       <Image source={require('../assets/Back.png')} style={styles.backIcon} />
@@ -44,8 +44,8 @@ export default function Address({ navigation }: any) {
         <Text style={[styles.head, { color: colors.text }]}>Name</Text>
         <TextInput
           placeholder="mr you"
-          placeholderTextColor={'#959595'}
-          style={styles.input}
+          placeholderTextColor={colors.muted}
+          style={[styles.input, { backgroundColor: colors.input, color: colors.text }]}
           value={name}
           onChangeText={setname}
         />
@@ -55,8 +55,8 @@ export default function Address({ navigation }: any) {
           <Text style={[styles.head, { color: colors.text }]}>City</Text>
           <TextInput
             placeholder="roper"
-            placeholderTextColor={'#959595'}
-            style={styles.input1}
+            placeholderTextColor={colors.muted}
+            style={[styles.input1, { backgroundColor: colors.input, color: colors.text }]}
             value={city}
             onChangeText={setcity}
           />
@@ -65,8 +65,8 @@ export default function Address({ navigation }: any) {
           <Text style={[styles.head, { color: colors.text }]}>Country</Text>
           <TextInput
             placeholder="furinagar"
-            placeholderTextColor={'#959595'}
-            style={styles.input1}
+            placeholderTextColor={colors.muted}
+            style={[styles.input1, { backgroundColor: colors.input, color: colors.text }]}
             value={country}
             onChangeText={setcountry}
           />
@@ -76,8 +76,8 @@ export default function Address({ navigation }: any) {
         <Text style={[styles.head, { color: colors.text }]}>Phone-number</Text>
         <TextInput
           placeholder="+91 98781-64914"
-          placeholderTextColor={'#959595'}
-          style={styles.input}
+          placeholderTextColor={colors.muted}
+          style={[styles.input, { backgroundColor: colors.input, color: colors.text }]}
           value={phone}
           onChangeText={setphone}
         />
@@ -86,8 +86,8 @@ export default function Address({ navigation }: any) {
         <Text style={[styles.head, { color: colors.text }]}>Address</Text>
         <TextInput
           placeholder="Chhatak, Sunamgonj 12/8AB"
-          placeholderTextColor={'#959595'}
-          style={styles.input}
+          placeholderTextColor={colors.muted}
+          style={[styles.input, { backgroundColor: colors.input, color: colors.text }]}
           value={fulladdress}
           onChangeText={setfulladdress}
         />
@@ -115,7 +115,6 @@ export default function Address({ navigation }: any) {
 const styles = StyleSheet.create({
   headview: {
     flex: 1,
-    backgroundColor: '#ffffff',
     justifyContent: 'space-between',
   },
   headerRow: {
@@ -126,7 +125,6 @@ const styles = StyleSheet.create({
   backButton: {
     width: 50,
     height: 50,
-    backgroundColor: '#f8f8f8',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
@@ -155,7 +153,6 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#dbdbdb',
     borderRadius: 10,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -167,7 +164,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input1: {
-    backgroundColor: '#dbdbdb',
     borderRadius: 10,
     marginHorizontal: 20,
     marginVertical: 10,

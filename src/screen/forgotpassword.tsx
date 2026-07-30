@@ -1,14 +1,15 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import React, { useState } from 'react';
-import { TextInput } from 'react-native-gesture-handler';
 import Buttond from '../components/button';
+import { useTheme } from '../context/ThemeContext';
 
 export default function ForgotPassword({ navigation }: { navigation: any }) {
+  const { colors } = useTheme();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -17,7 +18,7 @@ export default function ForgotPassword({ navigation }: { navigation: any }) {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.txt}>Forgot Password</Text>
+      <Text style={[styles.txt, { color: colors.text }]}>Forgot Password</Text>
       <Image
         style={{
           marginTop: 25,
@@ -29,19 +30,20 @@ export default function ForgotPassword({ navigation }: { navigation: any }) {
         source={require('../assets/IMG.png')}
       />
 
-      <Text style={styles.tx}>Email Address</Text>
+      <Text style={[styles.tx, { color: colors.muted }]}>Email Address</Text>
       <TextInput
         value={email}
         onChangeText={text => {
           setEmail(text);
           setError('');
         }}
-        style={styles.as}
+        style={[styles.as, { color: colors.text, borderBottomColor: colors.border }]}
+        placeholderTextColor={colors.muted}
       />
       <Text style={{ color: 'red', padding: 20 }}>{error}</Text>
 
       <View>
-        <Text style={styles.qw}>
+        <Text style={[styles.qw, { color: colors.muted }]}>
           Please write your email to receive a confirmation code to set a new
           password.
         </Text>
@@ -68,9 +70,6 @@ export default function ForgotPassword({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    //paddingHorizontal: 20,
-    // justifyContent:'center',
   },
   to: {
     backgroundColor: '#9775FA',

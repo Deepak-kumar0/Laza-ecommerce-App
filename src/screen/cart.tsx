@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   View,
   Text,
-  FlatList,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -16,10 +15,12 @@ import {
   increaseQuantity,
   removeFromCart,
 } from '../redux/slices/cart-slice';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Cart({ navigation }: any) {
   const cart = useSelector((state: RootState) => state?.cart?.cart) || [];
   const dispatch = useDispatch();
+  const { colors } = useTheme();
 
   const subtotal = cart.reduce(
     (sum: number, item: any) => sum + item.price * item.quantity,
@@ -29,10 +30,10 @@ export default function Cart({ navigation }: any) {
   const total = subtotal + shippingCost;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backBtn}
+          style={[styles.backBtn, { backgroundColor: colors.card }]}
           onPress={() => navigation.goBack()}
         >
           <Image
@@ -40,7 +41,7 @@ export default function Cart({ navigation }: any) {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Cart</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Cart</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -50,17 +51,19 @@ export default function Cart({ navigation }: any) {
       >
         {cart.length === 0 ? (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>Your cart is empty.</Text>
+            <Text style={[styles.emptyText, { color: colors.muted }]}>
+              Your cart is empty.
+            </Text>
           </View>
         ) : (
           cart.map((item: any) => (
-            <View key={item.id.toString()} style={styles.card}>
-              <View style={styles.imageWrapper}>
+            <View key={item.id.toString()} style={[styles.card, { backgroundColor: colors.card }]}>
+              <View style={[styles.imageWrapper, { backgroundColor: colors.background }]}>
                 <Image source={{ uri: item.image }} style={styles.image} />
               </View>
 
               <View style={styles.info}>
-                <Text numberOfLines={2} style={styles.name}>
+                <Text numberOfLines={2} style={[styles.name, { color: colors.text }]}>
                   {item.name || "Men's Tie-Dye T-Shirt"}
                 </Text>
                 <Text style={styles.brand}>Nike Sportswear</Text>
@@ -68,7 +71,7 @@ export default function Cart({ navigation }: any) {
 
                 <View style={styles.qtyRow}>
                   <TouchableOpacity
-                    style={styles.qtyBtn}
+                    style={[styles.qtyBtn, { backgroundColor: colors.background }]}
                     onPress={() => dispatch(decreaseQuantity(item.id))}
                   >
                     <Image
@@ -77,10 +80,10 @@ export default function Cart({ navigation }: any) {
                     />
                   </TouchableOpacity>
 
-                  <Text style={styles.qty}>{item.quantity}</Text>
+                  <Text style={[styles.qty, { color: colors.text }]}>{item.quantity}</Text>
 
                   <TouchableOpacity
-                    style={styles.qtyBtn}
+                    style={[styles.qtyBtn, { backgroundColor: colors.background }]}
                     onPress={() => dispatch(increaseQuantity(item.id))}
                   >
                     <Image
@@ -92,12 +95,12 @@ export default function Cart({ navigation }: any) {
               </View>
 
               <TouchableOpacity
-                style={styles.deleteBtn}
+                style={[styles.deleteBtn, { backgroundColor: colors.card }]}
                 onPress={() => dispatch(removeFromCart(item.id))}
               >
                 <Image
                   source={require('../assets/Trash.png')}
-                  style={styles.trashIcon}
+                  style={[styles.trashIcon, { tintColor: colors.text }]}
                 />
               </TouchableOpacity>
             </View>
@@ -105,11 +108,11 @@ export default function Cart({ navigation }: any) {
         )}
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Delivery Address</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Delivery Address</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Address')}>
             <Image
               source={require('../assets/Arrow.png')}
-              style={styles.sectionArrow}
+              style={[styles.sectionArrow, { tintColor: colors.text }]}
             />
           </TouchableOpacity>
         </View>
@@ -120,7 +123,7 @@ export default function Cart({ navigation }: any) {
             style={styles.addressIcon}
           />
           <View style={styles.addressTextContainer}>
-            <Text style={styles.addressTitle}>Chhatak, Sunamgonj 12/8AB</Text>
+            <Text style={[styles.addressTitle, { color: colors.text }]}>Chhatak, Sunamgonj 12/8AB</Text>
             <Text style={styles.addressSubtitle}>Sylhet</Text>
           </View>
           <View style={styles.checkCircle}>
@@ -129,21 +132,21 @@ export default function Cart({ navigation }: any) {
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment Method</Text>
           <TouchableOpacity onPress={() => navigation.navigate('payment')}>
             <Image
               source={require('../assets/Arrow.png')}
-              style={styles.sectionArrow}
+              style={[styles.sectionArrow, { tintColor: colors.text }]}
             />
           </TouchableOpacity>
         </View>
 
         <View style={styles.paymentCard}>
-          <View style={styles.cardLogoWrapper}>
+          <View style={[styles.cardLogoWrapper, { backgroundColor: colors.card }]}>
             <Text style={styles.visaText}>VISA</Text>
           </View>
           <View style={styles.paymentTextContainer}>
-            <Text style={styles.paymentTitle}>Visa Classic</Text>
+            <Text style={[styles.paymentTitle, { color: colors.text }]}>Visa Classic</Text>
             <Text style={styles.paymentSubtitle}>**** 7690</Text>
           </View>
           <View style={styles.checkCircle}>
@@ -152,24 +155,24 @@ export default function Cart({ navigation }: any) {
         </View>
 
         <Text
-          style={[styles.sectionTitle, { marginTop: 15, marginBottom: 12 }]}
+          style={[styles.sectionTitle, { marginTop: 15, marginBottom: 12, color: colors.text }]}
         >
           Order Info
         </Text>
 
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Subtotal</Text>
-          <Text style={styles.summaryValue}>${subtotal.toFixed(0)}</Text>
+          <Text style={[styles.summaryValue, { color: colors.text }]}>${subtotal.toFixed(0)}</Text>
         </View>
 
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Shipping cost</Text>
-          <Text style={styles.summaryValue}>${shippingCost}</Text>
+          <Text style={[styles.summaryValue, { color: colors.text }]}>${shippingCost}</Text>
         </View>
 
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Total</Text>
-          <Text style={styles.summaryValue}>${total.toFixed(0)}</Text>
+          <Text style={[styles.summaryValue, { color: colors.text }]}>${total.toFixed(0)}</Text>
         </View>
       </ScrollView>
 
@@ -188,7 +191,6 @@ export default function Cart({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 
   header: {
@@ -203,7 +205,6 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 45,
     height: 45,
-    backgroundColor: '#F5F6FA',
     //justify: 'center',
     alignItems: 'center',
     borderRadius: 22.5,
@@ -219,7 +220,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1D1E20',
   },
 
   placeholder: {
@@ -244,7 +244,6 @@ const styles = StyleSheet.create({
 
   card: {
     flexDirection: 'row',
-    backgroundColor: '#F5F6FA',
     borderRadius: 16,
     padding: 12,
     marginBottom: 16,
@@ -255,7 +254,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -274,7 +272,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#1D1E20',
     lineHeight: 18,
   },
 
@@ -304,7 +301,6 @@ const styles = StyleSheet.create({
     borderColor: '#E7E8EA',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
 
   arrowIcon: {
@@ -317,14 +313,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     fontWeight: '600',
     fontSize: 13,
-    color: '#1D1E20',
   },
 
   deleteBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
@@ -333,7 +327,6 @@ const styles = StyleSheet.create({
   trashIcon: {
     width: 16,
     height: 16,
-    tintColor: '#8F959E',
   },
 
   sectionHeader: {
@@ -347,13 +340,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#1D1E20',
   },
 
   sectionArrow: {
     width: 16,
     height: 16,
-    tintColor: '#1D1E20',
   },
 
   addressCard: {
@@ -376,7 +367,6 @@ const styles = StyleSheet.create({
   addressTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1D1E20',
   },
 
   addressSubtitle: {
@@ -394,7 +384,6 @@ const styles = StyleSheet.create({
   cardLogoWrapper: {
     width: 48,
     height: 36,
-    backgroundColor: '#F5F6FA',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -415,7 +404,6 @@ const styles = StyleSheet.create({
   paymentTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1D1E20',
   },
 
   paymentSubtitle: {
@@ -453,7 +441,6 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1D1E20',
   },
 
   checkoutContainer: {

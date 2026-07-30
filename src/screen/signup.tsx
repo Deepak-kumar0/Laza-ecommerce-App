@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import Buttond from '../components/button';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Signup({ navigation }: { navigation: any }) {
+  const { colors } = useTheme();
   const [isEnabled, setIsEnabled] = useState(true);
   const [istick, setIsTick] = useState(false);
 
@@ -80,7 +82,7 @@ export default function Signup({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -89,52 +91,59 @@ export default function Signup({ navigation }: { navigation: any }) {
           />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Sign Up</Text>
 
       <View style={styles.form}>
-        <Text style={styles.label}>Username</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>Username</Text>
 
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderBottomColor: colors.border },
+          ]}
           placeholder="Enter username"
-          placeholderTextColor={'grey'}
+          placeholderTextColor={colors.muted}
           value={form.username}
           onChangeText={text => onHandleChange('username', text)}
-
         />
-        {istick?(<Text>tick</Text>):(<Text>untick</Text>)}
+        {istick ? (
+          <Text style={{ color: colors.muted }}>tick</Text>
+        ) : (
+          <Text style={{ color: colors.muted }}>untick</Text>
+        )}
 
-
-        {/* <Text style={styles.error}>{error.username}</Text> */}
-
-        <Text style={styles.label}>Password</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>Password</Text>
 
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderBottomColor: colors.border },
+          ]}
           placeholder="Enter password"
+          placeholderTextColor={colors.muted}
           secureTextEntry
           value={form.password}
           onChangeText={text => onHandleChange('password', text)}
         />
 
-        {/* <Text style={styles.error}>{error.password}</Text> */}
-
-        <Text style={styles.label}>Email Address</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>Email Address</Text>
 
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { color: colors.text, borderBottomColor: colors.border },
+          ]}
           placeholder="Enter email"
+          placeholderTextColor={colors.muted}
           keyboardType="email-address"
           autoCapitalize="none"
           value={form.email}
           onChangeText={text => onHandleChange('email', text)}
         />
-
-        {/* <Text style={styles.error}>{error.email}</Text> */}
       </View>
 
       <View style={styles.switchRow}>
-        <Text style={styles.remember}>Remember me</Text>
+        <Text style={[styles.remember, { color: colors.text }]}>Remember me</Text>
 
         <Switch
           value={isEnabled}
@@ -155,8 +164,6 @@ export default function Signup({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    //paddingHorizontal: 20,
   },
 
   header: {

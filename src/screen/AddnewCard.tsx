@@ -21,7 +21,7 @@ export default function AddnewCard({ navigation }: any) {
       <View style={styles.view1}>
         <View style={styles.headerRow}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: colors.card }]}
             onPress={() => navigation.goBack()}
           >
             <Image
@@ -56,8 +56,8 @@ export default function AddnewCard({ navigation }: any) {
           <Text style={[styles.head, { color: colors.text }]}>Card Owner</Text>
           <TextInput
             placeholder="Mrh Raju"
-            placeholderTextColor={'#959595'}
-            style={styles.input}
+            placeholderTextColor={colors.muted}
+            style={[styles.input, { backgroundColor: colors.input, color: colors.text }]}
             value={name}
             onChangeText={setname}
           />
@@ -67,8 +67,8 @@ export default function AddnewCard({ navigation }: any) {
           <Text style={[styles.head, { color: colors.text }]}>Card Number</Text>
           <TextInput
             placeholder="5254 7634 8734 7690"
-            placeholderTextColor={'#959595'}
-            style={styles.input}
+            placeholderTextColor={colors.muted}
+            style={[styles.input, { backgroundColor: colors.input, color: colors.text }]}
             value={numb}
             onChangeText={setnumb}
           />
@@ -79,8 +79,8 @@ export default function AddnewCard({ navigation }: any) {
             <Text style={[styles.head, { color: colors.text }]}>EXP</Text>
             <TextInput
               placeholder="24/24"
-              placeholderTextColor={'#959595'}
-              style={styles.input1}
+              placeholderTextColor={colors.muted}
+              style={[styles.input1, { backgroundColor: colors.input, color: colors.text }]}
               value={exp}
               onChangeText={setexp}
             />
@@ -89,8 +89,8 @@ export default function AddnewCard({ navigation }: any) {
             <Text style={[styles.head, { color: colors.text }]}>CVV</Text>
             <TextInput
               placeholder="7763"
-              placeholderTextColor={'#959595'}
-              style={styles.input1}
+              placeholderTextColor={colors.muted}
+              style={[styles.input1, { backgroundColor: colors.input, color: colors.text }]}
               value={cvv}
               onChangeText={setcvv}
             />
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
   backButton: {
     width: 50,
     height: 50,
-    backgroundColor: '#f8f8f8',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
@@ -172,7 +171,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    backgroundColor: '#f8f8f8',
     borderRadius: 10,
     marginTop: 5,
     marginBottom: 10,
@@ -187,7 +185,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   input1: {
-    backgroundColor: '#f8f8f8',
     borderRadius: 10,
     marginTop: 5,
     height: 50,

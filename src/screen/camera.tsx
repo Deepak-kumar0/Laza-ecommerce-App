@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
   View,
- Text,
+  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -14,9 +14,11 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Camera() {
   const [image, setImage] = useState('');
+  const { colors } = useTheme();
 
   const askPermission = async () => {
     if (Platform.OS === 'android') {
@@ -97,24 +99,24 @@ export default function Camera() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
 
       <View style={styles.header}>
-        <TouchableOpacity style={styles.circle}>
-          <Text style={styles.icon}>←</Text>
+        <TouchableOpacity style={[styles.circle, { backgroundColor: colors.card }]}>
+          <Text style={[styles.icon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Image Picker</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Image Picker</Text>
 
         <TouchableOpacity
-          style={styles.circle}
+          style={[styles.circle, { backgroundColor: colors.card }]}
           onPress={deleteImage}>
           <Text style={styles.icon}>🗑</Text>
         </TouchableOpacity>
       </View>
 
 
-      <View style={styles.imageCard}>
+      <View style={[styles.imageCard, { backgroundColor: colors.card }]}>
         {image ? (
           <Image
             source={{uri: image}}
@@ -122,7 +124,7 @@ export default function Camera() {
           />
         ) : (
           <View style={styles.placeholder}>
-            <Text style={styles.placeholderText}>
+            <Text style={[styles.placeholderText, { color: colors.muted }]}>
               No Image Selected
             </Text>
           </View>
@@ -156,7 +158,6 @@ export default function Camera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
     padding: 20,
   },
 
@@ -172,7 +173,6 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
   imageCard: {
     height: 380,
     borderRadius: 25,
-    backgroundColor: '#fff',
     overflow: 'hidden',
     elevation: 8,
     marginBottom: 30,

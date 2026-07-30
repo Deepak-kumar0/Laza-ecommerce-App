@@ -11,7 +11,7 @@ import React, { useContext } from 'react';
 import products from '../../data.json';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import brand from '../../brand.json';
-import { CartContext } from '../context/cart-context';
+import { useTheme } from '../context/ThemeContext';
 import { RootState } from '../redux/store';
 import { addToCart, removeFromCart } from '../redux/slices/cart-slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,16 +19,18 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from '../redux/slices/wishlist-slice';
-
 export default function Home({ navigation }: { navigation: any }) {
+
   const dispatch = useDispatch();
+  const { colors } = useTheme();
+
   const wishlist = useSelector((state: RootState) => state.wishlist.wishlist);
   const cart = useSelector((state: RootState) => state?.cart?.cart);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,{ backgroundColor: colors.background }]}>
       <View style={styles.img}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image style={styles.icon} source={require('../assets/Menu.png')} />
         </TouchableOpacity>
 
@@ -45,8 +47,8 @@ export default function Home({ navigation }: { navigation: any }) {
         </View>
       </View>
 
-      <Text style={styles.header}>Hello</Text>
-      <Text style={styles.hd}>Welcome to Laza</Text>
+      <Text style={[styles.header, { color: colors.text }]}>Hello</Text>
+      <Text style={[styles.hd, { color: colors.muted }]}>Welcome to Laza</Text>
 
       <View
         style={{
@@ -57,7 +59,7 @@ export default function Home({ navigation }: { navigation: any }) {
           marginTop: 17,
         }}
       >
-        <TouchableOpacity style={styles.searchrow}>
+        <TouchableOpacity style={[styles.searchrow, { backgroundColor: colors.input }]}>
           <Image
             style={{
               height: 25,
@@ -66,6 +68,7 @@ export default function Home({ navigation }: { navigation: any }) {
               marginLeft: 10,
               alignSelf: 'center',
               flexDirection: 'row',
+              tintColor: colors.muted,
             }}
             source={require('../assets/Search.png')}
           />
@@ -73,7 +76,7 @@ export default function Home({ navigation }: { navigation: any }) {
             style={{
               alignSelf: 'center',
               fontSize: 18,
-              color: '#8F959E',
+              color: colors.muted,
               padding: 8,
               marginTop: 10,
               marginLeft: 5,
@@ -89,9 +92,11 @@ export default function Home({ navigation }: { navigation: any }) {
       </View>
 
       <View style={styles.as}>
-        <Text style={{ fontSize: 20, fontWeight: '500' }}>Choose Brand</Text>
+        <Text style={{ fontSize: 20, fontWeight: '500', color: colors.text }}>
+          Choose Brand
+        </Text>
         <TouchableOpacity>
-          <Text style={{ color: '#8F959E', fontSize: 15 }}>View All</Text>
+          <Text style={{ color: colors.muted, fontSize: 15 }}>View All</Text>
         </TouchableOpacity>
       </View>
 
@@ -101,7 +106,10 @@ export default function Home({ navigation }: { navigation: any }) {
         showsHorizontalScrollIndicator={false}
       >
         {brand.map(item => (
-          <View key={item.id} style={styles.brandCard}>
+          <View
+            key={item.id}
+            style={[styles.brandCard, { backgroundColor: colors.card }]}
+          >
             <Image
               style={{
                 width: 25,
@@ -110,7 +118,7 @@ export default function Home({ navigation }: { navigation: any }) {
               }}
               source={{ uri: item.image }}
             />
-            <Text style={{ textAlign: 'center', marginLeft: 10 }}>
+            <Text style={{ textAlign: 'center', marginLeft: 10, color: colors.text }}>
               {item.name}
             </Text>
           </View>
@@ -135,14 +143,14 @@ export default function Home({ navigation }: { navigation: any }) {
           return (
             <TouchableOpacity
               onPress={() => navigation.push('product', { item })}
-              style={styles.card}
+              style={[styles.card, { backgroundColor: colors.card }]}
               activeOpacity={0.8}
             >
               <Image source={{ uri: item.image }} style={styles.image} />
 
-              <Text style={styles.name}>{item.name}</Text>
+              <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
 
-              <Text style={styles.price}>${item.price}</Text>
+              <Text style={[styles.price, { color: colors.text }]}>${item.price}</Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -187,7 +195,6 @@ export default function Home({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fefefe',
     paddingHorizontal: 13,
   },
   cartBtn: {
@@ -203,16 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   brandCard: {
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // backgroundColor: '#F5F6FA',
-    // //padding: 10,
-    // height: 50,
-    // borderRadius: 12,
-    // marginRight: 10,
-
     flexDirection: 'row',
-    backgroundColor: '#dbdbdb88',
     borderRadius: 10,
     padding: 10,
     paddingHorizontal: 15,
@@ -223,7 +221,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     flexDirection: 'row',
-    backgroundColor: '#F5F6FA',
     height: 50,
   },
   voice: {
@@ -273,7 +270,6 @@ const styles = StyleSheet.create({
   card: {
     width: '48%',
     margin: '1%',
-    backgroundColor: '#fff',
     borderRadius: 15,
     padding: 10,
   },

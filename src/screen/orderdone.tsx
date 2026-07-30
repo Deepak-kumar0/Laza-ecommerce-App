@@ -16,7 +16,7 @@ export default function OrderDone({ navigation }: any) {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={[styles.backButton, { backgroundColor: colors.card }]}
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
@@ -34,11 +34,11 @@ export default function OrderDone({ navigation }: any) {
           resizeMode="contain"
         />
 
-        <Text style={[styles.head, { color: colors.text || '#000' }]}>
+        <Text style={[styles.head, { color: colors.text }]}>
           Order Confirmed!
         </Text>
 
-        <Text style={styles.line}>
+        <Text style={[styles.line, { color: colors.muted }]}>
           Your order has been confirmed, we will send you confirmation email
           shortly.
         </Text>
@@ -46,11 +46,13 @@ export default function OrderDone({ navigation }: any) {
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.ordersButton}
+          style={[styles.ordersButton, { backgroundColor: colors.card }]}
           onPress={() => navigation.navigate('cart')}
           activeOpacity={0.8}
         >
-          <Text style={styles.ordersText}>Go to Orders</Text>
+          <Text style={[styles.ordersText, { color: colors.muted }]}>
+            Go to Orders
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
   backButton: {
     width: 44,
     height: 44,
-    backgroundColor: '#F2F2F2',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 22,
@@ -85,7 +86,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     resizeMode: 'contain',
-    
   },
   content: {
     flex: 1,
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   },
   line: {
     fontSize: 15,
-    color: '#898484',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 15,
@@ -117,7 +116,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   ordersButton: {
-    backgroundColor: '#F3F3F3',
     height: 52,
     borderRadius: 12,
     justifyContent: 'center',
@@ -125,7 +123,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   ordersText: {
-    color: '#797979',
     fontSize: 16,
     fontWeight: '600',
   },

@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -11,35 +11,37 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
 export default function Product({ navigation }: { navigation: any }) {
-  const images = [
-    'https://picsum.photos/id/1011/500/500',
-    'https://picsum.photos/id/1018/500/500',
-    'https://picsum.photos/id/1025/500/500',
-    'https://picsum.photos/id/1035/500/500',
-  ];
+  const route = useRoute();
+  const item = route?.params?.item;
+  const { colors } = useTheme();
 
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const gallery = item?.images?.length
+    ? item.images
+    : [item?.image, item?.image, item?.image, item?.image];
+
+  const [selectedImage, setSelectedImage] = useState(gallery[0]);
   const [selectedSize, setSelectedSize] = useState('M');
   const sizes = ['S', 'M', 'L', 'XL', '2XL'];
 
-  const route = useRoute();
-
-  const item = route?.params?.item;
+  useEffect(() => {
+    setSelectedImage(gallery[0]);
+  }, [gallery[0]]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-        <View style={styles.imageContainer}>
+        <View style={[styles.imageContainer, { backgroundColor: colors.input }]}>
           <View style={styles.header}>
             <TouchableOpacity
-              style={styles.iconCircle}
+              style={[styles.iconCircle, { backgroundColor: colors.card }]}
               onPress={() => navigation.goBack()}
             >
               <Image
@@ -47,7 +49,10 @@ export default function Product({ navigation }: { navigation: any }) {
                 source={require('../assets/Back.png')}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconCircle}>
+            <TouchableOpacity
+              style={[styles.iconCircle, { backgroundColor: colors.card }]}
+              onPress={() => navigation.navigate('cart')}
+            >
               <Image
                 style={styles.backIcon}
                 source={require('../assets/Cart.png')}
@@ -56,7 +61,7 @@ export default function Product({ navigation }: { navigation: any }) {
           </View>
 
           <Image
-            source={{ uri: item?.image }}
+            source={{ uri: selectedImage || item?.image }}
             style={styles.mainImage}
             resizeMode="contain"
           />
@@ -65,19 +70,21 @@ export default function Product({ navigation }: { navigation: any }) {
         <View style={styles.content}>
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.category}>Men's category</Text>
-              <Text style={styles.title}>{item?.name}</Text>
+              <Text style={[styles.category, { color: colors.muted }]}>
+                Men's category
+              </Text>
+              <Text style={[styles.title, { color: colors.text }]}>{item?.name}</Text>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={styles.priceLabel}>Price</Text>
-              <Text style={styles.price}>${item?.price}</Text>
+              <Text style={[styles.priceLabel, { color: colors.muted }]}>Price</Text>
+              <Text style={[styles.price, { color: colors.text }]}>${item?.price}</Text>
             </View>
           </View>
 
           <FlatList
             horizontal
-            data={images}
-            keyExtractor={i => i}
+            data={gallery}
+            keyExtractor={(image, index) => `${image}-${index}`}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.thumbList}
             renderItem={({ item }) => (
@@ -86,6 +93,7 @@ export default function Product({ navigation }: { navigation: any }) {
                   source={{ uri: item }}
                   style={[
                     styles.thumb,
+                    { backgroundColor: colors.input },
                     selectedImage === item && styles.selectedThumb,
                   ]}
                 />
@@ -94,9 +102,9 @@ export default function Product({ navigation }: { navigation: any }) {
           />
 
           <View style={[styles.row, { marginTop: 8 }]}>
-            <Text style={styles.sectionTitle}>Size</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Size</Text>
             <TouchableOpacity>
-              <Text style={styles.guide}>Size Guide</Text>
+              <Text style={[styles.guide, { color: colors.muted }]}>Size Guide</Text>
             </TouchableOpacity>
           </View>
 
@@ -107,13 +115,18 @@ export default function Product({ navigation }: { navigation: any }) {
                 onPress={() => setSelectedSize(s)}
                 style={[
                   styles.sizeBtn,
-                  selectedSize === s && styles.sizeActive,
+                  { backgroundColor: colors.input },
+                  selectedSize === s && {
+                    borderWidth: 1,
+                    borderColor: colors.text,
+                  },
                 ]}
               >
                 <Text
                   style={[
                     styles.sizeTxt,
-                    selectedSize === s && { color: '#8F959E' },
+                    { color: colors.text },
+                    selectedSize === s && { color: colors.muted },
                   ]}
                 >
                   {s}
@@ -122,15 +135,15 @@ export default function Product({ navigation }: { navigation: any }) {
             ))}
           </View>
 
-          <Text style={styles.sectionTitle}>Description</Text>
-          <Text style={styles.desc}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
+          <Text style={[styles.desc, { color: colors.muted }]}>
             The Nike Throwback Pullover Hoodie is made from premium French terry
             fabric that blends a performance feel with{' '}
-            <Text style={styles.readMore}>Read More..</Text>
+            <Text style={[styles.readMore, { color: colors.text }]}>Read More..</Text>
           </Text>
 
           <View style={styles.row}>
-            <Text style={styles.sectionTitle}>Reviews</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Reviews</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('reviews', {
@@ -138,7 +151,7 @@ export default function Product({ navigation }: { navigation: any }) {
                 })
               }
             >
-              <Text style={styles.guide}>View All</Text>
+              <Text style={[styles.guide, { color: colors.muted }]}>View All</Text>
             </TouchableOpacity>
           </View>
 
@@ -149,20 +162,24 @@ export default function Product({ navigation }: { navigation: any }) {
                 style={styles.avatar}
               />
               <View style={{ flex: 1, marginLeft: 12 }}>
-                <Text style={styles.reviewerName}>Ronald Richards</Text>
-                <Text style={styles.reviewDate}>🕒 13 Sep, 2020</Text>
+                <Text style={[styles.reviewerName, { color: colors.text }]}>
+                  Ronald Richards
+                </Text>
+                <Text style={[styles.reviewDate, { color: colors.muted }]}>
+                  🕒 13 Sep, 2020
+                </Text>
               </View>
               <View style={{ alignItems: 'flex-end' }}>
                 <Text style={styles.ratingText}>
-                  <Text style={{ fontWeight: 'bold', color: '#1D1E20' }}>
+                  <Text style={{ fontWeight: 'bold', color: colors.text }}>
                     4.8
                   </Text>{' '}
-                  <Text style={{ color: '#8F959E', fontSize: 11 }}>rating</Text>
+                  <Text style={{ color: colors.muted, fontSize: 11 }}>rating</Text>
                 </Text>
                 <Text style={styles.stars}>⭐⭐⭐⭐⭐</Text>
               </View>
             </View>
-            <Text style={styles.reviewBody}>
+            <Text style={[styles.reviewBody, { color: colors.muted }]}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Pellentesque malesuada eget vitae amet...
             </Text>
@@ -170,10 +187,14 @@ export default function Product({ navigation }: { navigation: any }) {
 
           <View style={styles.priceRow}>
             <View>
-              <Text style={styles.totalPriceTitle}>Total Price</Text>
-              <Text style={styles.vatSubtext}>with VAT,SD</Text>
+              <Text style={[styles.totalPriceTitle, { color: colors.text }]}>
+                Total Price
+              </Text>
+              <Text style={[styles.vatSubtext, { color: colors.muted }]}>
+                with VAT,SD
+              </Text>
             </View>
-            <Text style={styles.totalPriceAmount}>$125</Text>
+            <Text style={[styles.totalPriceAmount, { color: colors.text }]}>$125</Text>
           </View>
         </View>
       </ScrollView>
@@ -188,13 +209,12 @@ export default function Product({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
   },
   imageContainer: {
-    backgroundColor: '#F5F6FA',
     width: '100%',
     height: 380,
     position: 'relative',
+    marginTop: 20,
   },
   header: {
     position: 'absolute',
@@ -210,7 +230,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -226,13 +245,14 @@ const styles = StyleSheet.create({
   },
 
   mainImage: {
-    marginTop: 15,
+    marginTop: 55,
     width: '100%',
     height: '100%',
   },
   content: {
     paddingHorizontal: 20,
     paddingTop: 16,
+    marginTop:40,
   },
   row: {
     flexDirection: 'row',
@@ -269,7 +289,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 10,
     marginRight: 10,
-    backgroundColor: '#F5F6FA',
   },
   selectedThumb: {
     borderWidth: 2,
@@ -278,11 +297,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#1D1E20',
     marginTop: 16,
   },
   guide: {
-    color: '#8F959E',
     fontSize: 15,
     marginTop: 16,
   },
@@ -295,28 +312,22 @@ const styles = StyleSheet.create({
     width: (width - 40 - 40) / 5,
     height: 50,
     borderRadius: 10,
-    backgroundColor: '#F5F6FA',
     justifyContent: 'center',
     alignItems: 'center',
   },
   sizeActive: {
-    backgroundColor: '#F5F6FA',
     borderWidth: 1,
-    borderColor: '#1D1E20',
   },
   sizeTxt: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1D1E20',
   },
   desc: {
-    color: '#8F959E',
     fontSize: 15,
     lineHeight: 22,
     marginTop: 8,
   },
   readMore: {
-    color: '#1D1E20',
     fontWeight: '700',
   },
   reviewCard: {
@@ -334,10 +345,8 @@ const styles = StyleSheet.create({
   reviewerName: {
     fontWeight: '600',
     fontSize: 15,
-    color: '#1D1E20',
   },
   reviewDate: {
-    color: '#8F959E',
     fontSize: 11,
     marginTop: 2,
   },
@@ -349,7 +358,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   reviewBody: {
-    color: '#8F959E',
     fontSize: 14,
     lineHeight: 20,
     marginTop: 10,
@@ -364,17 +372,14 @@ const styles = StyleSheet.create({
   totalPriceTitle: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1D1E20',
   },
   vatSubtext: {
     fontSize: 11,
-    color: '#8F959E',
     marginTop: 2,
   },
   totalPriceAmount: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1D1E20',
   },
   bottomBarButton: {
     backgroundColor: '#9775FA',

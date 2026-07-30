@@ -1,33 +1,68 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { mmkvStorage } from '../redux/mmkvStorage';
 
-// 1. Define the shape of our context
+type ThemeColors = {
+  background: string;
+  text: string;
+  card: string;
+  input: string;
+  muted: string;
+  border: string;
+  icon: string;
+};
+
 type ThemeContextType = {
   isDarkMode: boolean;
   toggleTheme: () => void;
-  colors: {
-    background: string;
-    text: string;
-    card: string;
-  };
+  colors: ThemeColors;
 };
 
-// 2. Create the Context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// 3. Create the Provider Component
+const THEME_KEY = 'theme_dark_mode';
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load saved theme preference on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const saved = await mmkvStorage.getItem(THEME_KEY);
+        if (saved === 'true') {
+          setIsDarkMode(true);
+        }
+      } catch {
+        // fallback: keep default false
+      } finally {
+        setIsLoaded(true);
+      }
+    })();
+  }, []);
 
   const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
+    setIsDarkMode(prev => {
+      const newValue = !prev;
+      mmkvStorage.setItem(THEME_KEY, String(newValue));
+      return newValue;
+    });
   };
 
-  // Pre-define your color palettes here so you don't have to write them on every screen
-  const colors = {
+  const colors: ThemeColors = {
     background: isDarkMode ? '#151515' : '#FFFFFF',
     text: isDarkMode ? '#FFFFFF' : '#000000',
-    card: isDarkMode ? '#575656' : '#f9f9f9', // Great for product cards or bottom bars
-  }; 
+    card: isDarkMode ? '#2A2A2A' : '#f9f9f9',
+    input: isDarkMode ? '#2A2A2A' : '#F5F6FA',
+    muted: isDarkMode ? '#A0A0A0' : '#8F959E',
+    border: isDarkMode ? '#3A3A3A' : '#E5E5E5',
+    icon: isDarkMode ? '#FFFFFF' : '#1D1E20',
+  };
+
+  // Don't render children until theme is loaded to avoid flash
+  if (!isLoaded) {
+    return null;
+  }
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme, colors }}>
@@ -36,7 +71,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 4. Create a custom hook for easy access (just like useCart)
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {

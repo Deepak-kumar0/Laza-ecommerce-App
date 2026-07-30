@@ -18,6 +18,8 @@ import Address from '../screen/Address';
 import payment from '../screen/payment';
 import AddnewCard from '../screen/AddnewCard';
 import orderdone from '../screen/orderdone';
+import DrawerNavigator from './drawer/DrawerNavigation';
+
 
 export default function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -25,7 +27,7 @@ export default function StackNavigation() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, }}>
       <Stack.Screen name="splash" component={Splash} />
-      <Stack.Screen name="main" component={TabNavigation}/>
+      <Stack.Screen name="main" component={DrawerNavigator}/>
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="signup" component={Signup} />
       <Stack.Screen name="welcome" component={Welcome} />

@@ -10,18 +10,20 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Wishlist({ navigation }: any) {
   const wishlist = useSelector((state: RootState) => state.wishlist.wishlist);
+  const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image style={styles.backIcon} source={require('../assets/Back.png')}/>
+          <Image style={styles.backIcon} source={require('../assets/Back.png')} />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Wishlist</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Wishlist</Text>
 
         <View style={{ width: 30 }} />
       </View>
@@ -32,18 +34,23 @@ export default function Wishlist({ navigation }: any) {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>Your wishlist is empty.</Text>
+            <Text style={[styles.emptyText, { color: colors.muted }]}>
+              Your wishlist is empty.
+            </Text>
           </View>
         )}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.card}
+            style={[styles.card, { backgroundColor: colors.card }]}
             onPress={() => navigation.push('product', { item })}
           >
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <Image
+              source={{ uri: item.image }}
+              style={[styles.image, { backgroundColor: colors.background }]}
+            />
 
             <View style={styles.info}>
-              <Text style={styles.name}>{item.name}</Text>
+              <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
               <Text style={styles.price}>${item.price}</Text>
             </View>
           </TouchableOpacity>
@@ -56,7 +63,6 @@ export default function Wishlist({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingHorizontal: 18,
   },
   header: {
@@ -64,7 +70,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 40,
-   // marginBottom: 20,
   },
   backIcon: {
     width: 45,
@@ -74,7 +79,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#1D1E20',
   },
   empty: {
     marginTop: 80,
@@ -82,12 +86,10 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: '#777',
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F6FA',
     borderRadius: 18,
     padding: 12,
     marginBottom: 14,
@@ -97,7 +99,6 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 12,
     resizeMode: 'contain',
-    backgroundColor: '#fff',
   },
   info: {
     marginLeft: 12,
