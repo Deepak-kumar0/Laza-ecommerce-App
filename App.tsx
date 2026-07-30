@@ -9,17 +9,17 @@ import { ThemeProvider } from './src/context/ThemeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
-//  const getFCMToken = async () => {
-//   try {
-//     const token = await messaging().getToken();
+ const getFCMToken = async () => {
+  try {
+    const token = await messaging().getToken();
 
-//     console.log('FCM TOKEN:', token);
+    console.log('FCM TOKEN:', token);
 
-//     return token;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
+    return token;
+  } catch (e) {
+    console.log(e);
+  }
+};
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
